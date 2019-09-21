@@ -1,5 +1,19 @@
 # Backup
 
+Take a directory, checksum all files, and then tar and compress it. Later, restore and check integrity.
+
+This works by creating a directory manifest containing paths and checksums. This is used later as the source of truth for backup integrity.
+
+## Usage
+
+```bash
+# Generates the tarball and the manifest
+$ python -m backup backup <path_to_backup> <archive_name>
+
+# Later
+$ python -m backup restore <manifest_to_restore>
+```
+
 ## Manifest structure
 
 ```json
@@ -17,3 +31,7 @@
   ]
 }
 ```
+
+## License
+
+[MIT](LICENSE)
