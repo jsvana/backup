@@ -3,5 +3,5 @@
   [ ] Checksum type
   [ ] Destinations
   [ ] Restoration configuration (separate binary?)
-[ ] Generate directory manifest
-[ ] Generate tarball (different archive file types?)
+[x] Generate directory manifest
+[x] Generate tarball (different archive file types?)
