@@ -95,9 +95,10 @@ def cmd_backup(args: argparse.Namespace) -> int:
     cwd = Path.cwd()
     for directory, dirnames, filenames in os.walk(args.path):
         directory_path = Path(directory)
+
         for filename in filenames:
             file_path = directory_path / filename
-            relative_path = file_path.relative_to(cwd)
+            relative_path = file_path.resolve().relative_to(cwd)
 
             paths_to_backup.append(relative_path)
 
@@ -142,7 +143,6 @@ def cmd_restore(args: argparse.Namespace) -> int:
 
     path_checksums = {f["path"]: f["checksum"] for f in manifest["files"]}
 
-    unexpected_paths = set()
     bad_checksums = {}
     restored_paths = set()
 
@@ -155,7 +155,6 @@ def cmd_restore(args: argparse.Namespace) -> int:
 
             expected_checksum = path_checksums.get(relative_path_str)
             if expected_checksum is None:
-                unexpected_paths.add(relative_path_str)
                 continue
 
             generated_checksum = generate_checksum(
@@ -175,13 +174,6 @@ def cmd_restore(args: argparse.Namespace) -> int:
             missing_paths.add(path_str)
 
     failed = False
-    if unexpected_paths:
-        print(
-            "Unexpected paths: {}".format(", ".join(sorted(unexpected_paths))),
-            file=sys.stderr,
-        )
-        failed = True
-
     if bad_checksums:
         messages = []
         for path in sorted(bad_checksums):
@@ -220,4 +212,5 @@ def main() -> int:
     return args.cmd(args)
 
 
-sys.exit(main())
+if __name__ == "__main__":
+    sys.exit(main())
